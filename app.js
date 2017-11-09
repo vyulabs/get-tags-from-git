@@ -69,11 +69,11 @@ function compareVersions(ver1, ver2) {
   for (let i = startIndex; i < tags.length; i++) {
     const tag = tags[i];
     const num = lastTaskNum + 1 + i - startIndex;
-    values.push(`(${config.templateID}, 'success', '', '${mysqlNow}', '${tag}', ${num})`);
+    values.push(`(${config.templateID}, 'success', '', '', '${mysqlNow}', '${tag}', ${num})`);
   }
 
   if (values.length > 0) {
-    await conn.query('INSERT INTO task(template_id, status, playbook, created, ver, num) VALUES ' +
+    await conn.query('INSERT INTO task(template_id, status, playbook, environment, created, ver, num) VALUES ' +
       values.join(', '));
   }
 
