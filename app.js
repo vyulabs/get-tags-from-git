@@ -1,8 +1,7 @@
 const Git = require('nodegit');
 const mysql = require('promise-mysql');
+const config = require('./config.json');
 
-const templateID = parseInt(process.argv[2]);
-const repoPath = process.argv[3];
 
 function compareVersions(ver1, ver2) {
   const parts1 = ver1.split('.').map(part => parseInt(part));
@@ -19,7 +18,7 @@ function compareVersions(ver1, ver2) {
 
 (async function() {
   console.log('Opening repo...');
-  const repo = await Git.Repository.open(repoPath);
+  const repo = await Git.Repository.open(config.repoPath);
 
 
   console.log('Retrieving tag list...');
@@ -30,10 +29,10 @@ function compareVersions(ver1, ver2) {
 
   console.log('Connecting to database...');
   const conn = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'semaphore'
+    host: config.db.host,
+    user: config.db.user,
+    password: config.db.password,
+    database: config.db.database
   });
 
   console.log('Retrieving versions from DB...');
@@ -42,7 +41,7 @@ function compareVersions(ver1, ver2) {
     'WHERE build_task_id IS NULL AND ' +
     'template_id=? AND ' +
     'NOT ver IS NULL AND ' +
-    'ver <> \'\' ORDER BY id', templateID)).filter(task => /\d+\.\d+\.\d+/.test(task.ver));
+    'ver <> \'\' ORDER BY id', config.templateID)).filter(task => /\d+\.\d+\.\d+/.test(task.ver));
   console.log(tasks.map(task => task.ver));
 
   console.log('Determining start version...');
@@ -70,7 +69,7 @@ function compareVersions(ver1, ver2) {
   for (let i = startIndex; i < tags.length; i++) {
     const tag = tags[i];
     const num = lastTaskNum + 1 + i - startIndex;
-    values.push(`(${templateID}, 'success', '', '${mysqlNow}', '${tag}', ${num})`);
+    values.push(`(${config.templateID}, 'success', '', '${mysqlNow}', '${tag}', ${num})`);
   }
 
   if (values.length > 0) {
@@ -84,5 +83,6 @@ function compareVersions(ver1, ver2) {
   if (err) {
     console.log(err);
   }
+  process.exit();
 });
 

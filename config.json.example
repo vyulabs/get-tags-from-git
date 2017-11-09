@@ -1,0 +1,10 @@
+{
+  "templateID": 234,
+  "repoPath": "/home/denis/src/my-project",
+  "db": {
+    "host": "localhost",
+    "database": "semaphore",
+    "user": "root",
+    "password": "secret"
+  }
+}
