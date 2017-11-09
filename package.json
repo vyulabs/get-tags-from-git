@@ -1,0 +1,16 @@
+{
+  "name": "get-tags-from-git",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.15.0",
+    "nodegit": "^0.20.3",
+    "promise-mysql": "^3.1.2"
+  }
+}
