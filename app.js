@@ -1,31 +1,22 @@
 const Git = require('nodegit');
 const mysql = require('promise-mysql');
 const config = require('./config.json');
+const helpers = require('helpers');
 
 
-function compareVersions(ver1, ver2) {
-  const parts1 = ver1.split('.').map(part => parseInt(part));
-  const parts2 = ver2.split('.').map(part => parseInt(part));
-  for (let i = 0; i < 3; i++) {
-    if (parts1[i] < parts2[i]) {
-      return -1;
-    } else if (parts1[i] > parts2[i]) {
-      return 1;
-    }
-  }
-  return 0;
-}
-
-(async function() {
+async function getTags() {
   console.log('Opening repo...');
   const repo = await Git.Repository.open(config.repoPath);
-
-
   console.log('Retrieving tag list...');
   const tags = (await Git.Tag.list(repo)).filter(tag => /\d+\.\d+\.\d+/.test(tag));
-
   console.log(tags);
+  tags.sort(helpers.compareVersions);
+  return tags;
+}
 
+
+(async function() {
+  const tags = await getTags();
 
   console.log('Connecting to database...');
   const conn = await mysql.createConnection({
@@ -36,7 +27,6 @@ function compareVersions(ver1, ver2) {
   });
 
   console.log('Retrieving versions from DB...');
-
   const tasks = (await conn.query('SELECT ver, num FROM task ' +
     'WHERE build_task_id IS NULL AND ' +
     'template_id=? AND ' +
@@ -50,7 +40,7 @@ function compareVersions(ver1, ver2) {
   if (lastTask !== undefined) {
     startIndex = tags.length;
     for (let i = tags.length - 1; i >= 0; i--) {
-      if (compareVersions(lastTask.ver, tags[i]) >= 0) {
+      if (helpers.compareVersions(lastTask.ver, tags[i]) >= 0) {
         startIndex = i + 1;
         break;
       }
@@ -85,4 +75,3 @@ function compareVersions(ver1, ver2) {
   }
   process.exit();
 });
-
