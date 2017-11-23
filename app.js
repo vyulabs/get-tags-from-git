@@ -1,7 +1,7 @@
 const Git = require('nodegit');
 const mysql = require('promise-mysql');
 const config = require('./config.json');
-const helpers = require('helpers');
+const helpers = require('./helpers');
 
 
 async function getTags() {
