@@ -67,6 +67,13 @@ async function getTags() {
       values.join(', '));
   }
 
+  console.log('Updating last success build...');
+  if (values.length > 0) {
+    const lastBuild = conn.query('SELECT id, ver FROM task WHERE template_id = ? ORDER BY id DESC LIMIT 1', config.templateID)[0];
+    await conn.query('UPDATE project__template SET last_success_build_task_id=?, last_success_version=? WHERE id = ?',
+      lastBuild.id, lastBuild.ver, config.templateID);
+  }
+
   console.log('Closing DB connection...');
   conn.end();
 })().catch(err => {
