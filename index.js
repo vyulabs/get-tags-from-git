@@ -3,7 +3,7 @@ const app = express();
 const config = require('./config.json');
 const importer = require('./importer');
 
-app.get('/bitbucket_front_pushed', (req, res) => {
+app.post('/bitbucket_front_pushed', (req, res) => {
   importer(config).then(() => {
     res.send('Hello World!');
   }).catch(err => {
