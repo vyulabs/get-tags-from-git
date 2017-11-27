@@ -1,3 +1,6 @@
+const Git = require('nodegit');
+
+
 function compareVersions(ver1, ver2) {
   const parts1 = ver1.split('.').map(part => parseInt(part));
   const parts2 = ver2.split('.').map(part => parseInt(part));
@@ -11,4 +14,15 @@ function compareVersions(ver1, ver2) {
   return 0;
 }
 
+async function getTags(repoPath) {
+  console.log('Opening repo...');
+  const repo = await Git.Repository.open(repoPath);
+  console.log('Retrieving tag list...');
+  const tags = (await Git.Tag.list(repo)).filter(tag => /\d+\.\d+\.\d+/.test(tag));
+  console.log(tags);
+  tags.sort(compareVersions);
+  return tags;
+}
+
+exports.getTags = getTags;
 exports.compareVersions = compareVersions;
