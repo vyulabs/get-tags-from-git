@@ -18,7 +18,7 @@ function compareVersions(ver1, ver2) {
 
 async function getTags(repoPath) {
   console.log('Updating from remote...');
-  await exec(`cd ${repoPath}; git pull`, (err, stdout, stderr) => {
+  await exec('git pull', { cwd: repoPath }, (err, stdout, stderr) => {
     if (err) {
       console.log(err);
     }
