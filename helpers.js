@@ -1,4 +1,6 @@
 const Git = require('nodegit');
+const exec = require('child_process').exec;
+
 
 
 function compareVersions(ver1, ver2) {
@@ -15,8 +17,18 @@ function compareVersions(ver1, ver2) {
 }
 
 async function getTags(repoPath) {
+  console.log('Updating from remote...');
+  await exec('git pull', (err, stdout, stderr) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+
   console.log('Opening repo...');
   const repo = await Git.Repository.open(repoPath);
+
   console.log('Retrieving tag list...');
   const tags = (await Git.Tag.list(repo)).filter(tag => /\d+\.\d+\.\d+/.test(tag));
   console.log(tags);
