@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "get-tags-from-git",
+      "script": "index.js",
+      "watch": false,
+      "cwd": "/opt/get-tags-from-git"
+    }
+  ]
+}
