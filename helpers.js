@@ -32,10 +32,10 @@ async function getTags(repoPath) {
 
   const { stdout, stderr } = await exec('git pull', { cwd: repoPath });
 
-  console.log(`stdout:`);
-  console.log(stdout);
-  console.log(`stderr:`);
-  console.log(stderr);
+  //console.log(`stdout:`);
+  //console.log(stdout);
+  //console.log(`stderr:`);
+  //console.log(stderr);
 
   await delay(5000);
 
