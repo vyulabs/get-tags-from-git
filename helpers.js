@@ -32,10 +32,12 @@ async function getTags(repoPath) {
 
   const { stdout, stderr } = await exec('git pull', { cwd: repoPath });
 
-  console.log(`stdout: ${stdout}`);
-  console.log(`stderr: ${stderr}`);
+  console.log(`stdout:`);
+  console.log(stdout);
+  console.log(`stderr:`);
+  console.log(stderr);
 
-  //await delay(5000);
+  await delay(5000);
 
   console.log('Opening repo...');
   const repo = await Git.Repository.open(repoPath);
