@@ -32,8 +32,9 @@ async function getTags(repoPath) {
   console.log('Retrieving tag list...');
   const tags = (await Git.Tag.list(repo)).filter(tag => /\d+\.\d+\.\d+/.test(tag));
   tags.sort(compareVersions);
+
   if (tags.length > 10) {
-    console.log(tags.slice(10));
+    console.log(tags.slice(tags.length - 10));
   } else {
     console.log(tags);
   }
