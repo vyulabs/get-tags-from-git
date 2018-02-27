@@ -18,7 +18,12 @@ module.exports = async function(config) {
     'template_id=? AND ' +
     'NOT ver IS NULL AND ' +
     'ver <> \'\' ORDER BY id', config.templateID)).filter(task => /\d+\.\d+\.\d+/.test(task.ver));
-  console.log(tasks.map(task => task.ver));
+
+  let taskVersions = tasks.map(task => task.ver);
+  if (taskVersions.length > 10) {
+    taskVersions = taskVersions.slice(taskVersions.length - 10);
+  }
+  console.log(taskVersions);
 
   console.log('Determining start version...');
   const lastTask = tasks[tasks.length - 1];
