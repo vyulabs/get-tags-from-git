@@ -1,7 +1,11 @@
 const Git = require('nodegit');
 const exec = require('child_process').exec;
 
-
+async function delay(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
 
 function compareVersions(ver1, ver2) {
   const parts1 = ver1.split('.').map(part => parseInt(part));
@@ -18,6 +22,7 @@ function compareVersions(ver1, ver2) {
 
 async function getTags(repoPath) {
   console.log('Updating from remote...');
+  await delay(3000);
   await exec('git pull', { cwd: repoPath }, (err, stdout, stderr) => {
     if (err) {
       console.log(err);
